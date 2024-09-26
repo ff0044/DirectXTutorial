@@ -1,0 +1,38 @@
+name: Build DirectX Solution
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up MSBuild to build the solution
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v1.0.3
+
+      # Set up Visual Studio
+      - name: Set up Visual Studio
+        uses: microsoft/setup-vs@v1
+        with:
+          vs-version: 2022  # Update the version if necessary
+          # Install required workloads (add/remove as needed)
+          # Modify these workloads to match your project's requirements
+          # For example: desktop development with C++, game development with C++
+          workloads: |
+            Microsoft.VisualStudio.Workload.ManagedDesktop
+            Microsoft.VisualStudio.Workload.NativeDesktop
+
+      # Build the solution
+      - name: Build solution
+        run: msbuild Direct3D_Win32_DR.sln /p:Configuration=Release /p:Platform=x64
